@@ -8,18 +8,19 @@ WORKDIR /app
 RUN apk add --no-cache wget unzip bash
 
 # ========= 4. PocketBase の安定バージョン指定 =========
-# （最新版でもOK。ここでは v0.21.3 を使用）
-ARG PB_VER=v0.21.3
+ARG PB_VER=0.21.3
+ENV PB_FILE=pocketbase_${PB_VER}_linux_amd64.zip
 
 # ========= 5. PocketBaseダウンロード&解凍 =========
-RUN wget https://github.com/pocketbase/pocketbase/releases/download/${PB_VER}/pocketbase_${PB_VER}_linux_amd64.zip -O pocketbase.zip \
+RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VER}/${PB_FILE} -O pocketbase.zip \
   && unzip pocketbase.zip -d . \
   && rm pocketbase.zip \
   && chmod +x pocketbase
 
-# ========= 6. データ保存フォルダ（永続ディスク用）=========
-# Renderで /app/pb_data にディスクをマウントした場合に対応
-RUN mkdir -p /app/pb_data
+# ========= 6. データ保存フォルダ（Renderの永続ディスクと一致）=========
+# ※ Renderで /app/pb_data をマウントすること
+VOLUME /app/pb_data
+RUN mkdir -p /app/pb_data /app/pb_migrations
 
 # ========= 7. 権限を付与 =========
 RUN chmod -R 777 /app
