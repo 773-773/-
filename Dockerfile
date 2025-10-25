@@ -26,4 +26,4 @@ RUN mkdir -p /app/pb_data /app/pb_migrations
 RUN chmod -R 777 /app
 
 # ========= 8. PocketBase起動 =========
-CMD ["./pocketbase", "serve", "--dir", "/app/pb_data", "--http=0.0.0.0:10000"]
+CMD ["./pocketbase", "serve", "--dir", "/app/pb_migrations", "--http=0.0.0.0:10000"]
