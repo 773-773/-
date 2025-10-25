@@ -16,13 +16,15 @@ RUN wget https://github.com/pocketbase/pocketbase/releases/download/${PB_VER}/po
   && rm pocketbase.zip \
   && chmod +x pocketbase
 
-# ========= 6. データ保存フォルダ作成 =========
-RUN mkdir -p /app/pb_data /app/pb_migrations
+# ========= 6. データ保存ディレクトリ（Renderの永続ディスクと一致させる）=========
+# RenderでMountした `/app/pb_data` をそのままPocketBaseが使う
+VOLUME /app/pb_data
 
-# ========= 7. Renderの無料環境でも書き込めるように権限付与 =========
+# ========= 7. マイグレーションフォルダ作成 =========
+RUN mkdir -p /app/pb_migrations
+
+# ========= 8. 権限付与 =========
 RUN chmod -R 777 /app
 
-# ========= 8. PocketBaseを起動 =========
-# --dir はマイグレーション用フォルダ
-# --http はRenderの公開ポート10000へバインド
+# ========= 9. PocketBase起動 =========
 CMD ["./pocketbase", "serve", "--dir", "/app/pb_migrations", "--http=0.0.0.0:10000"]
