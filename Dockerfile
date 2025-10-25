@@ -1,25 +1,28 @@
-# ====== 1. ベースイメージ ======
+# ========= 1. ベースイメージ =========
 FROM alpine:3.18
 
-# ====== 2. 作業ディレクトリ ======
+# ========= 2. 作業ディレクトリ =========
 WORKDIR /app
 
-# ====== 3. 必要なツール ======
+# ========= 3. 必要なツール追加 =========
 RUN apk add --no-cache wget unzip bash
 
-# ====== 4. PocketBase の安定版を指定 ======
-ARG PB_VER=v0.21.2
-RUN wget https://github.com/pocketbase/pocketbase/releases/download/${PB_VER}/pocketbase_${PB_VER}_linux_amd64.zip -O pb.zip \
+# ========= 4. PocketBase 安定バージョン指定 =========
+ARG PB_VER=0.21.2
+ENV PB_FILE=pocketbase_${PB_VER}_linux_amd64.zip
+
+# ========= 5. PocketBaseダウンロード&解凍 =========
+RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VER}/${PB_FILE} -O pb.zip \
   && unzip pb.zip -d . \
   && rm pb.zip \
   && chmod +x pocketbase
 
-# ====== 5. データ保存フォルダ（Render Disk と一致） ======
+# ========= 6. 永続ディスク設定 =========
 VOLUME /app/pb_data
 RUN mkdir -p /app/pb_data /app/pb_migrations
 
-# ====== 6. 権限付与 ======
+# ========= 7. 書き込み権限を付与 =========
 RUN chmod -R 777 /app
 
-# ====== 7. PocketBase 起動 ======
+# ========= 8. PocketBase起動 =========
 CMD ["./pocketbase", "serve", "--dir", "/app/pb_data", "--http=0.0.0.0:10000"]
