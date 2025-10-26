@@ -26,4 +26,4 @@ RUN chmod -R 777 /app
 
 # ========= 8. PocketBase起動 =========
 # Render は $PORT 環境変数を使う必要がある
-CMD ["sh", "-c", "./pocketbase serve --dir /app/pb_data --http 0.0.0.0:${PORT}"]
+CMD ["sh", "/app/start.sh"]
