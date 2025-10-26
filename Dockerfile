@@ -21,9 +21,12 @@ RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSIO
 VOLUME /app/pb_data
 RUN mkdir -p /app/pb_data
 
-# ========= 7. 権限を付与 =========
+# ========= 7. start.sh をコピーして実行権限付与 =========
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# ========= 8. 権限を付与（最終的な再確認用） =========
 RUN chmod -R 777 /app
 
-# ========= 8. PocketBase起動 =========
-# Render は $PORT 環境変数を使う必要がある
+# ========= 9. PocketBase起動（Renderは$PORTを自動でセットする）=========
 CMD ["sh", "/app/start.sh"]
