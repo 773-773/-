@@ -1,32 +1,25 @@
-# ========= 1. ベースイメージ =========
 FROM alpine:3.18
-
-# ========= 2. 作業ディレクトリ =========
 WORKDIR /app
 
-# ========= 3. 必要なツール追加 =========
 RUN apk add --no-cache wget unzip bash
 
-# ========= 4. PocketBaseバージョン指定 =========
 ENV PB_VERSION=0.21.2
 ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
-# ========= 5. PocketBaseダウンロード & 解凍 =========
 RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${PB_FILE} -O pocketbase.zip \
   && unzip pocketbase.zip -d . \
   && rm pocketbase.zip \
   && chmod +x pocketbase
 
-# ========= 6. 永続データディレクトリ =========
 VOLUME /app/pb_data
 RUN mkdir -p /app/pb_data
 
-# ========= 7. start.sh をコピーして実行権限付与 =========
+# 🔴 追加する部分
+COPY pb_public /app/pb_public
+
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-# ========= 8. 権限を付与（最終的な再確認用） =========
 RUN chmod -R 777 /app
 
-# ========= 9. PocketBase起動（Renderは$PORTを自動でセットする）=========
 CMD ["sh", "/app/start.sh"]
