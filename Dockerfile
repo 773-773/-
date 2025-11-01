@@ -35,5 +35,11 @@ RUN chmod -R 777 /app
 # ✅ ポートを指定
 EXPOSE 8080
 
+# ✅ PocketBaseバックアップ自動復元
+COPY pb_data_backup.zip /app/
+RUN apk add --no-cache unzip && \
+    unzip -o /app/pb_data_backup.zip -d /app/pb_data && \
+    chmod -R 777 /app/pb_data
+
 # ✅ 起動コマンド
 CMD ["sh", "/app/start.sh"]
