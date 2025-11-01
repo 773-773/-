@@ -5,5 +5,5 @@ cd /app
 mkdir -p /app/pb_data
 chmod -R 777 /app/pb_data
 
-# ✅ 公開ディレクトリ指定を削除
-./pocketbase serve --http="0.0.0.0:${PORT}" --dir="/app/pb_data"
+# ✅ PocketBaseをAPI + HTMLサーバとして両方動かす設定
+./pocketbase serve --http="0.0.0.0:${PORT}" --dir="/app/pb_data" --publicDir="/app/pb_public"
