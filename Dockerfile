@@ -1,38 +1,36 @@
-# ベース：軽量 Linux
+# ベース：軽量 Alpine Linux
 FROM alpine:3.18
 
-# 作業ディレクトリ
 WORKDIR /app
 
-# 必要パッケージ
-RUN apk add --no-cache wget unzip bash
+# PocketBase に必要な最低限のパッケージ
+RUN apk add --no-cache wget unzip bash ca-certificates
 
-# ✅ PocketBase の安定版を “明示固定”
+# PocketBase のバージョン固定（安定版）
 ARG PB_VERSION=0.22.14
 ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
-# ✅ PocketBase 本体を取得＆展開（存在が確認できる版）
+# PocketBase ダウンロード＆展開
 RUN wget -q https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${PB_FILE} -O pocketbase.zip \
   && unzip pocketbase.zip -d . \
   && rm pocketbase.zip \
-  && chmod +x /app/pocketbase \
-  && /app/pocketbase --help >/dev/null
+  && chmod +x /app/pocketbase
 
-# ✅ 公開フォルダ（静的ファイル）
+# 公開フォルダ（静的ファイル）
 COPY pb_public /app/pb_public
 
-# ✅ 起動スクリプト
+# 起動スクリプト
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-# ✅ Render の永続ディスクは「実行時に」/app/pb_data にマウントされる
-#    ここでは存在前提にしない（作成は start.sh で行う）
+# Renderの永続ディスクは/app/pb_dataにマウントされる
 VOLUME /app/pb_data
 
-# 任意：パーミッション緩め（Renderの権限差異での書込失敗対策）
+# 権限トラブル対策（Render環境によってroot以外ユーザーで動作するため）
 RUN chmod -R 777 /app
 
-# Render は PORT 環境変数を割り当てる
+# Render は自動で PORT 環境変数を渡す
 EXPOSE 8080
 
-CMD ["sh", "/app/start.sh"]
+# ✅ 起動コマンド
+CMD ["/app/start.sh"]
