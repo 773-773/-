@@ -8,7 +8,8 @@ WORKDIR /app
 RUN apk add --no-cache wget unzip bash ca-certificates
 
 # PocketBase の安定版（v0.22.14 固定）
-ARG PB_VERSION=0.22.14
+ARG PB_VERSION=0.23.6
+
 ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
 # PocketBase を取得＆展開
