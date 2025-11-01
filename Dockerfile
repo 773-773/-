@@ -17,15 +17,14 @@ RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSIO
   && rm pocketbase.zip \
   && chmod +x pocketbase
 
-# ✅ Renderの永続ディスクをマウント
-VOLUME /app/pb_data
-
 # ✅ 公開フォルダ（HTMLなど）
 COPY pb_public /app/pb_public
 
-# ✅ バックアップZIPを展開して pb_data に復元
+# ✅ バックアップZIPを完全復元
 COPY buckup_2025_10_31.zip /app/
-RUN unzip /app/buckup_2025_10_31.zip -d /app/pb_data && \
+RUN rm -rf /app/pb_data && \
+    mkdir -p /app/pb_data && \
+    unzip /app/buckup_2025_10_31.zip -d /app/pb_data && \
     chmod -R 777 /app/pb_data
 
 # ✅ 起動スクリプトをコピー＆権限付与
