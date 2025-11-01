@@ -1,20 +1,15 @@
 #!/bin/sh
 set -e
 
-# 永続ディレクトリを確実に作成
+# データ保存ディレクトリ
 mkdir -p /app/pb_data
 
-# デバッグ出力（Renderログで確認できる）
-echo "[diag] PORT=${PORT}"
-echo "[diag] PB_PUBLIC_URL=${PB_PUBLIC_URL}"
+# ZIP展開（もし未展開なら）
+if [ -f /app/pb_public.zip ] && [ ! -d /app/pb_public ]; then
+  echo "Unzipping pb_public.zip..."
+  unzip -oq /app/pb_public.zip -d /app/pb_public
+fi
 
-# PocketBase が自分のURLを正確に認識できるようにする
-PUBLIC_URL="https://delivery-eye.onrender.com"
-echo "[diag] Using publicURL=${PUBLIC_URL}"
-
-# PocketBase 起動（v0.24.4で正式対応）
-exec /app/pocketbase serve \
-  --http=0.0.0.0:${PORT:-8080} \
-  --dir=/app/pb_data \
-  --publicDir=/app/pb_public \
-  --publicURL=${PUBLIC_URL}
+# 起動ログ
+echo "Starting PocketBase on port ${PORT:-8080}..."
+exec /app/pocketbase serve --http=0.0.0.0:${PORT:-8080} --dir=/app/pb_data --publicDir=/app/pb_public
