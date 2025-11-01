@@ -39,3 +39,8 @@ RUN apk add --no-cache unzip && \
     rm -rf /app/pb_data/* && \
     unzip /app/buckup_2025_10_31.zip -d /app/pb_data && \
     chmod -R 777 /app/pb_data
+# ✅ バックアップZIPを展開して /app/pb_data に復元
+COPY buckup_2025_10_31.zip /app/
+RUN apk add --no-cache unzip && \
+    unzip /app/buckup_2025_10_31.zip -d /app/pb_data && \
+    chmod -R 777 /app/pb_data
