@@ -3,16 +3,16 @@ FROM alpine:3.18
 
 WORKDIR /app
 
-# キャッシュを完全に破棄（重要）
+# キャッシュ破棄
 ARG CACHEBUST=$(date +%s)
 
 RUN apk add --no-cache wget unzip bash
 
-# ✅ PocketBase 最新バージョン
-ENV PB_VERSION=0.33.0
+# ✅ PocketBase安定版
+ENV PB_VERSION=0.22.14
 ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
-# ✅ 古い pocketbase を完全削除して再取得
+# ✅ 最新PocketBaseを確実にダウンロード
 RUN rm -f pocketbase && \
     wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${PB_FILE} -O pocketbase.zip && \
     unzip pocketbase.zip -d . && \
