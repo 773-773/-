@@ -17,8 +17,9 @@ RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/do
   && rm pocketbase.zip \
   && chmod +x /app/pocketbase
 
-# ✅ Desktop直下の pb_public フォルダを正しくコピー
-COPY ../pb_public /app/pb_public
+# ✅ pb_public フォルダ（HTML群）をコンテナにコピー
+# 🚨 注意: 「../pb_public」ではなく「pb_public」
+COPY pb_public /app/pb_public
 
 # ✅ バックアップZIPをコピー
 COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
@@ -35,5 +36,3 @@ EXPOSE 8080
 
 # ✅ PocketBase を start.sh 経由で起動
 ENTRYPOINT ["sh", "/app/start.sh"]
-
-# ✅ Force rebuild to refresh pb_public
