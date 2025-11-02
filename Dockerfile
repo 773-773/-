@@ -11,15 +11,15 @@ RUN apk add --no-cache wget unzip bash ca-certificates
 ARG PB_VERSION=0.24.4
 ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
-# ✅ PocketBase 本体を取得＆展開（キャッシュ防止付き）
+# ✅ PocketBase 本体を取得＆展開
 RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${PB_FILE}?$(date +%s)" \
   && unzip pocketbase.zip -d . \
   && rm pocketbase.zip \
   && chmod +x /app/pocketbase \
   && /app/pocketbase --help >/dev/null
 
-# ✅ 公開フォルダ（静的ファイル）
-COPY pb_public /app/pb_public
+# ✅ あなたの public フォルダ（HTML群）を PocketBase 公開ディレクトリに配置
+COPY public /app/pb_public
 
 # ✅ バックアップZIPをRender環境にコピー
 COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
@@ -28,13 +28,13 @@ COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-# ✅ 永続ディスク（Render側で /app/pb_data にマウント）
+# ✅ 永続ディスク
 VOLUME /app/pb_data
 
-# ✅ 権限を緩める（Renderの権限差対策）
+# ✅ 権限緩和（Renderのファイル権限対策）
 RUN chmod -R 777 /app
 
-# ✅ Render が割り当てる PORT を使う
+# ✅ Render のポート
 EXPOSE 8080
 
 # ✅ 起動コマンド
