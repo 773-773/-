@@ -35,3 +35,5 @@ EXPOSE 8080
 
 # ✅ PocketBase を start.sh 経由で起動
 ENTRYPOINT ["sh", "/app/start.sh"]
+
+# ✅ Force rebuild to refresh pb_public
