@@ -21,6 +21,9 @@ RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/do
 # ✅ 公開フォルダ（静的ファイル）
 COPY pb_public /app/pb_public
 
+# ✅ バックアップZIPをRender環境にコピー
+COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
+
 # ✅ 起動スクリプトをコピー
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
