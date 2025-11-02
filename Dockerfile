@@ -1,31 +1,37 @@
 # ベース：軽量 Alpine Linux
 FROM alpine:3.18
 
+# 作業ディレクトリ
 WORKDIR /app
 
+# 必要パッケージをインストール
 RUN apk add --no-cache wget unzip bash ca-certificates
 
+# ✅ PocketBase の安定版を固定
 ARG PB_VERSION=0.24.4
 ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
+# ✅ PocketBase 本体を取得
 RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${PB_FILE}" \
   && unzip pocketbase.zip -d . \
   && rm pocketbase.zip \
   && chmod +x /app/pocketbase
 
-# ✅ あなたの public フォルダをコピー
-COPY pb_public /app/pb_public
+# ✅ Desktop直下の pb_public フォルダを正しくコピー
+COPY ../pb_public /app/pb_public
 
-# ✅ バックアップZIP
+# ✅ バックアップZIPをコピー
 COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
 
-# ✅ start.sh を確実に使う
+# ✅ 起動スクリプトをコピー
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
+# ✅ 永続ディスク設定
 VOLUME /app/pb_data
 
+# ✅ ポート設定
 EXPOSE 8080
 
-# ✅ RenderがPocketBaseを直接起動しないように完全固定
+# ✅ PocketBase を start.sh 経由で起動
 ENTRYPOINT ["sh", "/app/start.sh"]
