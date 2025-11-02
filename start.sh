@@ -9,9 +9,8 @@ echo "🧹 Cleaning old pb_public directory..."
 rm -rf /app/pb_public/*
 mkdir -p /app/pb_public
 
-# === 全力ZIP探索 ===
+# === ZIP探索 ===
 echo "🔍 Searching for pb_public.zip in all possible locations..."
-
 FOUND_ZIP=""
 
 for path in \
@@ -46,13 +45,10 @@ else
   echo "❌ No pb_public.zip found in any location!"
 fi
 
-# === 確認ログ ===
-echo "📁 pb_public directory contents after extraction:"
-ls -lah /app/pb_public || echo "(no files found)"
-
-# === PocketBase 起動 ===
-echo "🚀 Starting PocketBase on port ${PORT:-8080}..."
-exec /app/pocketbase serve \
+# === ここから PocketBase を起動 ===
+echo "🚀 Launching PocketBase on port ${PORT:-8080} ..."
+cd /app
+./pocketbase serve \
   --http=0.0.0.0:${PORT:-8080} \
   --dir=/app/pb_data \
   --publicDir=/app/pb_public
