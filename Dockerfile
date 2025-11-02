@@ -19,7 +19,8 @@ RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/do
   && /app/pocketbase --help >/dev/null
 
 # ✅ あなたの public フォルダ（HTML群）を PocketBase 公開ディレクトリに配置
-COPY public /app/pb_public
+COPY pb_public /app/pb_public
+
 
 # ✅ バックアップZIPをRender環境にコピー
 COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
