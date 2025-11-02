@@ -7,8 +7,6 @@ mkdir -p /app/pb_public
 echo "🚀 Launching PocketBase (direct public folder mode)"
 echo "📂 Using /app/pb_public as static directory"
 
-# PocketBase 起動
-cd /app
 ./pocketbase serve \
   --http=0.0.0.0:${PORT:-8080} \
   --dir=/app/pb_data \
