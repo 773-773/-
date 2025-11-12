@@ -4,7 +4,7 @@ FROM alpine:3.18
 # 作業ディレクトリ
 WORKDIR /app
 
-# 必要パッケージをインストール
+# 必要パッケージ
 RUN apk add --no-cache wget unzip bash ca-certificates
 
 # ✅ PocketBase の安定版を固定
@@ -13,26 +13,23 @@ ENV PB_FILE=pocketbase_${PB_VERSION}_linux_amd64.zip
 
 # ✅ PocketBase 本体を取得
 RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${PB_FILE}" \
-  && unzip pocketbase.zip -d . \
-  && rm pocketbase.zip \
-  && chmod +x /app/pocketbase
+    && unzip pocketbase.zip -d . \
+    && rm pocketbase.zip \
+    && chmod +x /app/pocketbase
 
-# ✅ pb_public フォルダ（HTML群）をコンテナにコピー
-# 🚨 注意: 「../pb_public」ではなく「pb_public」
+# ✅ 公開フォルダとメールテンプレートを含める
 COPY pb_public /app/pb_public
-COPY pb_hooks /app/pb_hooks
-# ✅ （一時的に無効化）バックアップZIPのコピーを停止
-# COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
+COPY pb_hooks  /app/pb_hooks
 
-# ✅ 起動スクリプトをコピー
+# 起動スクリプト
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
-# ✅ 永続ディスク設定
+# 永続ディレクトリ
 VOLUME /app/pb_data
 
-# ✅ ポート設定
+# ポート
 EXPOSE 8080
 
-# ✅ PocketBase を start.sh 経由で起動
+# 起動
 ENTRYPOINT ["sh", "/app/start.sh"]
