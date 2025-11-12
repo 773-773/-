@@ -20,7 +20,7 @@ RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/do
 # ✅ pb_public フォルダ（HTML群）をコンテナにコピー
 # 🚨 注意: 「../pb_public」ではなく「pb_public」
 COPY pb_public /app/pb_public
-
+COPY pb_hooks /app/pb_hooks
 # ✅ （一時的に無効化）バックアップZIPのコピーを停止
 # COPY buckup_2025_10_31.zip /app/buckup_2025_10_31.zip
 
