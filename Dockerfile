@@ -20,8 +20,7 @@ RUN wget -O pocketbase.zip "https://github.com/pocketbase/pocketbase/releases/do
 # ✅ 公開フォルダとメールテンプレートを含める
 COPY pb_public /app/pb_public
 COPY pb_hooks  /app/pb_hooks
-
-# 起動スクリプト
+RUN chmod -R 755 /app/pb_hooks# 起動スクリプト
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
